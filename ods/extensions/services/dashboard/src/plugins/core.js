@@ -8,6 +8,7 @@ import {
   Network,
   UserPlus,
   CreditCard,
+  Wallet,
 } from 'lucide-react'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
@@ -18,6 +19,7 @@ const Models = lazy(() => import('../pages/Models'))
 const ServiceMap = lazy(() => import('../pages/ServiceMap'))
 const Invites = lazy(() => import('../pages/Invites'))
 const Usage = lazy(() => import('../pages/Usage'))
+const SolanaWallet = lazy(() => import('../pages/SolanaWallet'))
 
 export const coreRoutes = [
   {
@@ -70,6 +72,22 @@ export const coreRoutes = [
     getProps: () => ({}),
     sidebar: true,
     order: 3,
+  },
+  {
+    id: 'solana',
+    path: '/solana',
+    label: 'Solana Wallet',
+    icon: Wallet,
+    component: SolanaWallet,
+    getProps: ({ status }) => ({ status }),
+    // Route is always registered; the sidebar entry only appears when the
+    // optional solana extension is enabled.
+    sidebar: ({ status }) =>
+      (status?.services || []).some((s) => {
+        const key = String(s?.id ?? s?.name ?? '').toLowerCase()
+        return key === 'solana' || key.includes('solana')
+      }),
+    order: 3.4,
   },
   // Usage + Setup / Owner are reachable from Settings rather than the top-level
   // sidebar. Setup / Owner is a factory/distributor/service-provider flow, not
